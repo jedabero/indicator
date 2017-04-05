@@ -14,7 +14,11 @@ APP_ID = 'com.jedabero.indicator'
 
 def app_test(_):
     out = check_output(['./test.sh'])
-    Notify.Notification.new('Output', out.decode(), None).show()
+    label = Gtk.Label(out.decode())
+    win = Gtk.Window(title="Resultado")
+    win.add(label)
+    win.show_all()
+    """Notify.Notification.new('Output', out.decode(), None).show()"""
 
 
 def app_quit(_):
@@ -22,14 +26,23 @@ def app_quit(_):
     Gtk.main_quit()
 
 
+def make_menu(text, callback):
+    item_test = Gtk.MenuItem(text)
+    item_test.connect('activate', callback)
+    return item_test
+
+
 def build_menu():
     menu = Gtk.Menu()
-    item_test = Gtk.MenuItem('Ejecutar script')
-    item_test.connect('activate', app_test)
-    menu.append(item_test)
-    item_quit = Gtk.MenuItem('Salir')
-    item_quit.connect('activate', app_quit)
-    menu.append(item_quit)
+    menu.append(make_menu('Ejecutar script', app_test))
+    menu.append(make_menu('Salir', app_quit))
+    """
+    submenuitem = Gtk.MenuItem('Submenu')
+    submenu = Gtk.Menu()
+    submenu.append(make_menu('Ejecutar script', app_test))
+    submenuitem.set_submenu(submenu)
+    menu.append(submenuitem)
+    """
     menu.show_all()
     return menu
 
